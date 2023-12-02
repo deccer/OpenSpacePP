@@ -88,6 +88,5 @@ void GameApplication::Render()
     Application::Render();
 
     _graphicsPipeline->Use();
-
-    glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, nullptr);
+    _graphicsPipeline->Draw(_indices.size(), 0u);
 }

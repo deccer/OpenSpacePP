@@ -81,6 +81,7 @@ std::expected<std::unique_ptr<GraphicsPipeline>, std::string> GraphicsPipelineBu
         graphicsPipeline->Program = program;
         graphicsPipeline->_vertexShader = vertexShader;
         graphicsPipeline->_fragmentShader = fragmentShader;
+        graphicsPipeline->_primitiveTopology = ToGL(_graphicsPipelineDescriptor._primitiveTopology);
     }
     else
     {
@@ -419,5 +420,19 @@ uint32_t GraphicsPipelineBuilder::ToGL(Format format)
             return GL_UNSIGNED_INT;
         default:
             return 0;
+    }
+}
+
+uint32_t GraphicsPipelineBuilder::ToGL(PrimitiveTopology primitiveTopology)
+{
+    switch (primitiveTopology)
+    {
+        case PrimitiveTopology::Lines: return GL_LINES;
+        case PrimitiveTopology::Points: return GL_POINTS;
+        case PrimitiveTopology::TriangleFan: return GL_TRIANGLE_FAN;
+        case PrimitiveTopology::Triangles: return GL_TRIANGLES;
+        case PrimitiveTopology::TriangleStrip: return GL_TRIANGLE_STRIP;
+        default:
+            return 0; 
     }
 }

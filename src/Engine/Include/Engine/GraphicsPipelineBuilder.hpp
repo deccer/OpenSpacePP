@@ -65,4 +65,5 @@ private:
     bool IsNormalizedFormat(Format format);
 
     uint32_t ToGL(Format format);
+    uint32_t ToGL(PrimitiveTopology PrimitiveTopology);
 };

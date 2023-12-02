@@ -38,6 +38,7 @@ public:
         swap(lhs._inputLayout, rhs._inputLayout);
         swap(lhs._vertexShader, rhs._vertexShader);
         swap(lhs._fragmentShader, rhs._fragmentShader);
+        swap(lhs._primitiveTopology, rhs._primitiveTopology);
     }
 
     void UseVertexBufferBinding(
@@ -48,10 +49,13 @@ public:
     void UseIndexBufferBinding(const Buffer* indexBuffer);
     void Use() override;
 
+    void Draw(uint32_t elementCount, uint32_t offset = 0);
+
 private:
     friend class GraphicsPipelineBuilder;
 
     uint32_t _inputLayout = {};
     uint32_t _vertexShader = {};
     uint32_t _fragmentShader = {};
+    uint32_t _primitiveTopology = {};
 };

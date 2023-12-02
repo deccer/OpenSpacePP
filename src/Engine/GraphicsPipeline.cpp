@@ -37,3 +37,10 @@ void GraphicsPipeline::Use()
     Pipeline::Use();
     glBindVertexArray(_inputLayout);
 }
+
+void GraphicsPipeline::Draw(
+    uint32_t elementCount,
+    uint32_t offset)
+{
+    glDrawElements(_primitiveTopology, elementCount, GL_UNSIGNED_INT, reinterpret_cast<void*>(offset));
+}
