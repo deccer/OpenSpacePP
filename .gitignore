@@ -361,3 +361,6 @@ cmake-build-release/
 
 # Assets
 models/**
+
+# Any IntelliJ IDE
+.idea/
