@@ -3,8 +3,8 @@
 #include <Engine/Application.hpp>
 #include <Engine/Buffer.hpp>
 #include <Engine/Device.hpp>
-#include <Engine/VertexPositionUv.hpp>
 #include <Engine/GraphicsPipeline.hpp>
+#include <Engine/VertexPositionUvVP.hpp>
 
 #include <vector>
 #include <string>
@@ -21,7 +21,7 @@ protected:
     void Render() override;
 
 private:
-    std::vector<VertexPositionUv> _vertices;
+    std::vector<VertexPositionUvVp> _vertices;
     std::vector<uint32_t> _indices;
 
     std::unique_ptr<Buffer> _vertexBuffer;

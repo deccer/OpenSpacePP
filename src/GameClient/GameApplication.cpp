@@ -19,21 +19,8 @@ bool GameApplication::Load()
     }
 
     if (auto graphicsPipelineResult = _device->CreateGraphicsPipelineBuilder("Simple")
-        .WithInputLayout("PositionUv", std::to_array<const InputLayoutElement>(
-        {
-            {
-                .Location = 0,
-                .BindingIndex = 0,
-                .AttributeFormat = Format::R32G32B32_FLOAT,
-                .Offset = offsetof(VertexPositionUv, Position)},
-            {
-                .Location = 1,
-                .BindingIndex = 0,
-                .AttributeFormat = Format::R32G32_FLOAT,
-                .Offset = offsetof(VertexPositionUv, Uv)
-            },
-        }))
-        .WithShaders("Data/Shaders/Simple.vs.glsl", "Data/Shaders/Simple.fs.glsl")
+
+        .WithShaders("Data/Shaders/SimpleVertexPulling.vs.glsl", "Data/Shaders/Simple.fs.glsl")
         .WithPrimitiveTopology(PrimitiveTopology::Triangles)
         .Build())
     {
@@ -45,13 +32,13 @@ bool GameApplication::Load()
         return false;
     }
 
-    _vertices.push_back({.Position = glm::vec3(-0.5f, +0.5f, 0.0f), .Uv = glm::vec2(0.0f, 1.0f)});
-    _vertices.push_back({.Position = glm::vec3(+0.0f, -0.5f, 0.0f), .Uv = glm::vec2(0.5f, 0.0f)});
-    _vertices.push_back({.Position = glm::vec3(+0.5f, +0.5f, 0.0f), .Uv = glm::vec2(1.0f, 1.0f)});
+    _vertices.push_back({.Position = {-0.5f, +0.5f, 0.0f}, .Uv = {0.0f, 1.0f}});
+    _vertices.push_back({.Position = {+0.0f, -0.5f, 0.0f}, .Uv = {0.5f, 0.0f}});
+    _vertices.push_back({.Position = {+0.5f, +0.5f, 0.0f}, .Uv = {1.0f, 1.0f}});
 
     _vertexBuffer = std::make_unique<Buffer>(Buffer::Create(
         "Buffer_Vertices_Triangle",
-        SizeInBytes(_vertices),        
+        SizeInBytes(_vertices),
         GL_ARRAY_BUFFER,
         GL_DYNAMIC_STORAGE_BIT));
     _vertexBuffer->Write(_vertices.data(), SizeInBytes(_vertices), 0u);
@@ -63,12 +50,12 @@ bool GameApplication::Load()
     _indexBuffer = std::make_unique<Buffer>(Buffer::Create(
         "Buffer_Indices_Triangle",
         SizeInBytes(_indices),
-        GL_ELEMENT_ARRAY_BARRIER_BIT,        
+        GL_ELEMENT_ARRAY_BARRIER_BIT,
         GL_DYNAMIC_STORAGE_BIT));
     _indexBuffer->Write(_indices.data(), SizeInBytes(_indices), 0u);
 
-    _graphicsPipeline->UseVertexBufferBinding(_vertexBuffer.get(), 0, 0, sizeof(VertexPositionUv));
-    _graphicsPipeline->UseIndexBufferBinding(_indexBuffer.get());
+    //_graphicsPipeline->UseVertexBufferBinding(_vertexBuffer.get(), 0, 0, sizeof(VertexPositionUv));
+    //_graphicsPipeline->UseIndexBufferBinding(_indexBuffer.get());
 
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 
@@ -88,5 +75,7 @@ void GameApplication::Render()
     Application::Render();
 
     _graphicsPipeline->Use();
-    _graphicsPipeline->Draw(_indices.size(), 0u);
+    _graphicsPipeline->BindAsShaderStorageBuffer(_vertexBuffer, 0, 0, SizeInBytes(_vertices));
+    _graphicsPipeline->BindAsShaderStorageBuffer(_indexBuffer, 1, 0, SizeInBytes(_indices));
+    _graphicsPipeline->DrawArrays(_vertices.size(), 0u);
 }

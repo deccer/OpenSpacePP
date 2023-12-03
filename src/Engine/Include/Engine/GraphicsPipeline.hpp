@@ -49,7 +49,12 @@ public:
     void UseIndexBufferBinding(const Buffer* indexBuffer);
     void Use() override;
 
-    void Draw(uint32_t elementCount, uint32_t offset = 0);
+    void DrawArrays(
+        uint32_t elementCount,
+        uint32_t elementOffset = 0);
+    void DrawElements(
+        uint32_t elementCount,
+        uint32_t offsetInBytes = 0);
 
 private:
     friend class GraphicsPipelineBuilder;

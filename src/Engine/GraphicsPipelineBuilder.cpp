@@ -1,4 +1,5 @@
 #include <Engine/GraphicsPipelineBuilder.hpp>
+#include <Engine/Device.hpp>
 #include <Engine/GraphicsPipeline.hpp>
 #include <Engine/InputLayoutElement.hpp>
 #include <Engine/Io.hpp>
@@ -10,6 +11,8 @@
 
 #include <format>
 #include <vector>
+
+using namespace std::literals;
 
 GraphicsPipelineBuilder::GraphicsPipelineBuilder(std::string_view label)
 {
@@ -68,9 +71,22 @@ std::expected<std::unique_ptr<GraphicsPipeline>, std::string> GraphicsPipelineBu
             fragmentShaderFileResult.error()));
     }
 
-    graphicsPipeline->_inputLayout = CreateInputLayout(
-        _graphicsPipelineDescriptor._inputLayoutLabel,
-        _graphicsPipelineDescriptor._inputLayoutElements);
+    if (_graphicsPipelineDescriptor._inputLayoutLabel.empty())
+    {
+        if (_defaultInputLayout == 0)
+        {
+            glCreateVertexArrays(1, &_defaultInputLayout);
+            auto label = "InputLayout-Default"sv;
+            glObjectLabel(GL_VERTEX_ARRAY, _defaultInputLayout, label.size(), label.data());
+        }
+        graphicsPipeline->_inputLayout = _defaultInputLayout;
+    }
+    else
+    {
+        graphicsPipeline->_inputLayout = CreateInputLayout(
+            _graphicsPipelineDescriptor._inputLayoutLabel,
+            _graphicsPipelineDescriptor._inputLayoutElements);
+    }
 
     if (auto programResult = CreateProgram(
         std::format("Program-{}", _graphicsPipelineDescriptor._label),

@@ -13,6 +13,7 @@ enum class Format;
 enum class PrimitiveTopology;
 struct InputLayoutElement;
 
+class Device;
 class GraphicsPipeline;
 class GraphicsPipelineBuilder;
 
@@ -24,7 +25,7 @@ private:
 
     std::string_view _label;
     PrimitiveTopology _primitiveTopology;
-    std::string_view _inputLayoutLabel;    
+    std::string_view _inputLayoutLabel;
     std::span<const InputLayoutElement> _inputLayoutElements;
     std::string_view _vertexShaderFilePath;
     std::string_view _fragmentShaderFilePath;
@@ -46,8 +47,6 @@ public:
     std::expected<std::unique_ptr<GraphicsPipeline>, std::string> Build();
 
 private:
-    GraphicsPipelineDescriptor _graphicsPipelineDescriptor;
-
     std::expected<std::tuple<uint32_t, uint32_t, uint32_t>, std::string> CreateProgram(
         std::string_view label,
         std::string_view vertexShaderSource,
@@ -66,4 +65,7 @@ private:
 
     uint32_t ToGL(Format format);
     uint32_t ToGL(PrimitiveTopology PrimitiveTopology);
+
+    GraphicsPipelineDescriptor _graphicsPipelineDescriptor;
+    uint32_t _defaultInputLayout = 0;    
 };

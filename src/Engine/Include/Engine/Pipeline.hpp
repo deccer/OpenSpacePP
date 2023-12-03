@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <utility>
 
 struct Buffer;
@@ -30,8 +31,8 @@ public:
 
     virtual void Use();
 
-    void BindAsUniformBuffer(const Buffer& buffer, uint32_t bindingIndex, uint32_t offset, uint32_t size);
-    void BindAsShaderStorageBuffer(const Buffer& buffer, uint32_t bindingIndex, uint32_t offset, uint32_t size);
+    void BindAsUniformBuffer(const std::unique_ptr<Buffer>& buffer, uint32_t bindingIndex, uint32_t offset, uint32_t size);
+    void BindAsShaderStorageBuffer(const std::unique_ptr<Buffer>& buffer, uint32_t bindingIndex, uint32_t offset, uint32_t size);
     
 protected:
     uint32_t Program = {};
