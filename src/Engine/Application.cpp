@@ -174,7 +174,7 @@ bool Application::Initialize()
 {
     if (glfwInit() == GLFW_FALSE)
     {
-        spdlog::error("Glfw: Unable to initialize");
+        spdlog::error("GLFW: Unable to initialize");
         return false;
     }
 
@@ -196,7 +196,7 @@ bool Application::Initialize()
     auto windowWidth = static_cast<int32_t>(static_cast<float>(screenWidth) * 0.8f);
     auto windowHeight = static_cast<int32_t>(static_cast<float>(screenHeight) * 0.8f);
 
-    _windowHandle = glfwCreateWindow(windowWidth, windowHeight, "OpenGL - Getting Started", nullptr, nullptr);
+    _windowHandle = glfwCreateWindow(windowWidth, windowHeight, "OpenSpace", nullptr, nullptr);
     if (_windowHandle == nullptr)
     {
         const char* errorDescription = nullptr;
@@ -218,20 +218,14 @@ bool Application::Initialize()
     glfwSetFramebufferSizeCallback(_windowHandle, ApplicationAccess::FramebufferResizeCallback);
     glfwSetKeyCallback(_windowHandle, ApplicationAccess::KeyCallback);
 
+    glfwSwapInterval(1);
+
     glfwMakeContextCurrent(_windowHandle);
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
     glDebugMessageCallback(ApplicationAccess::DebugMessageCallback, _windowHandle);
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-
-    glEnable(GL_FRAMEBUFFER_SRGB);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
-
-    glClearColor(0.35f, 0.67f, 0.16f, 1.0f);
-    glClearDepthf(1.0f);
 
     _device = std::make_unique<Device>();
 
